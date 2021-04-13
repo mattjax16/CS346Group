@@ -1,6 +1,6 @@
-% Matt Bass
+% Matt Bass, Jackson , Will
 %
-% mnbass21_cs346_hw2.m
+% mnbass21_jbpret22_wcjohn22_hw2_2_CS346.m.m
 % CS346 -- Computational Modeling and Simulation
 % Spring, 2021
 
@@ -40,7 +40,7 @@ shark_population = 20; %(float, variable P in equation)
 tuna_population = 106;  %(float, variable Y in equation)
     
 human_population = 20; %(float, variable H in equation)
-fishing_rate = 0.00; %(float between 0 and 1, reresents the rate-constants 
+fishing_rate = 0.01; %(float between 0 and 1, reresents the rate-constants 
                      % K_PH and K_YH)
 	
     
@@ -60,6 +60,10 @@ show_population_cycle_phase_plane = true;
 % Change the variables above in the simulation for different results 
 % Then run the script with the run button in MatLab
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
 
 %Initilized the starting values fot rest of Sim
 
