@@ -21,7 +21,7 @@ num_iter = t/dt; %number of iteration
 
 %derivtive functions
 dPdt = @(time,pos,vel) (vel); %caclulates velocity based on change in displacment
-dVdt = @(time,pos,vel) (); %caclulates accel based on change in veloc
+dVdt = @(time,pos,vel) (a(grav_F,rest_F(pos))); %caclulates accel based on change in veloc
 
 %Euler Method
 disp = zeros(1,num_iter); 
@@ -42,8 +42,26 @@ plot(time(1:num_iter),disp);
 
 
 %RK4 Method
+disp = zeros(1,num_iter); 
+veloc = zeros(1,num_iter);
+disp(1) = initial_springLen;
+veloc(1) = 0; 
 
 
-
-
+for j = 2:num_iter
+    del_P1 = dPdt(j,disp(j),veloc(j-1))*dt;
+    del_V1 = dVdt(j,disp(j-1))*dt;
+    del_P2 = dPdt(j+0.5*dt,disp(j)+0.5*del_P1,veloc(j-1)+0.5*del_V1)*dt;
+    del_V2 = dVdt(j+0.5*dt,disp(j)+0.5*del_P1,veloc(j-1)+0.5*del_V1)*dt;
+    del_P3 = dPdt(j+0.5*dt,disp(j)+0.5*del_P2,veloc(j-1)+0.5*del_V2)*dt;
+    del_V3 = dVdt(j+0.5*dt,disp(j)+0.5*del_P2,veloc(j-1)+0.5*del_V2)*dt;
+    del_P4 = dPdt(j+dt,disp(j)+del_P3,veloc(j-1)+del_V3)*dt;
+    del_V4 = dVdt(j+dt,disp(j)+del_P3,veloc(j-1)+del_V3)*dt;
+    change_disp = (del_P1 + 2*del_P2+2*del_P3 + del_P4)/6;
+    change_veloc = (del_V1 + 2*del_V2+2*del_V3 + del_V4)/6;
+    veloc(j) = veloc(j-1)+change_veloc;
+    disp(j) = disp(j-1)+change_disp;
+end
+figure();
+plot(time(1:num_iter),disp);
     
