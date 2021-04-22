@@ -90,7 +90,7 @@ shark_birth_fraction = 0.5; %(b_0 should probably be a float less than 1)
 % boolean variables to determine which plots are shown
 % if both plots are chosen they will be in a sub-plot
 show_population_over_time_plot = true;
-show_population_cycle_phase_plane = false;
+show_population_cycle_phase_plane = true;
     
 % Change the variables above in the simulation for different results 
 % Then run the script with the run button in MatLab
