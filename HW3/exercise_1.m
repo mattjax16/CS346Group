@@ -16,7 +16,7 @@ potassium_conductance = 36; % maximum conductance in millisiemens per ...
 leakage_conductance = 0.3; % maximum conductance in millisiemens per ...
                            % centimeters squared                        
 
-time = 8; % milliseconds
+time = 3; % milliseconds
 delta_time = .001; % milliseconds
 number_iterations = time/delta_time;
 time_array = zeros(1, number_iterations); % time array
@@ -35,28 +35,28 @@ bh = @(voltage) (1 / (exp(-(voltage + 35) / 10) + 1));
      % h-gate closing rate constant in meters per second
 
 sodium_channel_current = @(voltage, n, m, h) (sodium_conductance * m^3 * ...
-                         h * (voltage - sodium_displacement));
+    h * (voltage - sodium_displacement)); %nanoampheres
 potassium_channel_current = @(voltage, n, m, h) (potassium_conductance * ...
-                            n^4 * (voltage - potassium_displacement));
+    n^4 * (voltage - potassium_displacement)); %nanoampheres
 leakage_current = @(voltage, n, m, h) (leakage_conductance * ...
-                  (voltage - leakage_displacement));
+	(voltage - leakage_displacement)); %nanoampheres
 
 dvdt = @(voltage, n, m, h) (((1 / capitance) * ...
      (applied_current - (sodium_channel_current(voltage, n, m, h) + ...
      potassium_channel_current(voltage, n, m, h) + ...
      leakage_current(voltage, n, m, h)))));
-dndt = @(voltage, n, m, h) ((an(voltage) * (1 - n) - ...
-     bn(voltage) * n));
-dmdt = @(voltage, n, m, h) ((am(voltage) * (1 - m) - ...
-     bm(voltage) * m));
-dhdt = @(voltage, n, m, h) ((ah(voltage) * (1 - h) - ...
-     bh(voltage) * h));
+dndt = @(voltage, n, m, h) ((an(voltage) * (1 - n) - bn(voltage) * n));
+dmdt = @(voltage, n, m, h) ((am(voltage) * (1 - m) - bm(voltage) * m));
+dhdt = @(voltage, n, m, h) ((ah(voltage) * (1 - h) - bh(voltage) * h));
    
 % initial values
-V = zeros(1, number_iterations);
+V = zeros(1, number_iterations); % initialized voltage array
 V(1) = -65; % initial voltage in millivolts
-m(1) = am(V(1)) / (am(V(1)) + bm(V(1))); % initial m-value
+n = zeros(1, number_iterations); % initialized n array
 n(1) = an(V(1)) / (an(V(1)) + bn(V(1))); % initial n-value
+m = zeros(1, number_iterations); % initialized m array
+m(1) = am(V(1)) / (am(V(1)) + bm(V(1))); % initial m-value
+h = zeros(1, number_iterations); % initialized h array
 h(1) = ah(V(1)) / (ah(V(1)) + bh(V(1))); % initial h-value
        
 for i = 2:number_iterations
