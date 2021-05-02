@@ -1,3 +1,5 @@
+
+
 %Constants
 capitance = 0.1; % microfarads per centimeter squared
 applied_current = 15; %nanoampheres
@@ -6,40 +8,24 @@ sodium_displacement = 50; % displacement from the equilibrium  ...
                           % potential in milllivolts
 potassium_displacement = -77; % displacement from the equilibrium ...
                               % potential in milllivolts
-leakage_displacement = -54.4; % displacement from the equilibrium ...
+leakage_displacement = -49.42; % displacement from the equilibrium ...
                                % potential in milllivolts
 
-sodium_conductance = 120; % maximum conductance in millisiemens per ...
-                          % centimeters squared
-potassium_conductance = 36; % maximum conductance in millisiemens per ...
-                            % centimeters squared
-leakage_conductance = 0.3; % maximum conductance in millisiemens per ...
-                           % centimeters squared                        
+sodium_conductance = 1.2; % maximum conductance in millisiemens per ...
+                          % centime
+gbarK=0.36; % mS/cm^2 K conductance
+gbarl=0.003 % mS/cm^2 Leakage conductance
 
-time = 3; % milliseconds
-delta_time = .001; % milliseconds
-number_iterations = t/dt;                           
+delta_time = 0.001; % milliseconds
+t=0:dt:25; %Time Array ms
 
-an = @(voltage) (0.01 * (voltage + 55))/(1 - e^(-(voltage + 55) / 10));
-     % n-gate opening rate constant in meters per second
-am = @(voltage) (0.1 * (voltage + 40))/(1 - e^(-(voltage + 40) / 10));
-     % m-gate opening rate constant in meters per second
-ah = @(voltage) (0.07 * e^(-(voltage + 65) / 20));
-     % h-gate opening rate constant in meters per second
-bn = @(voltage) (0.125 * e^(-(voltage + 65) / 80));
-     % n-gate closing rate constant in meters per second
-bm = @(voltage) (4 * e^(-(voltage + 65) / 18));
-     % m-gate closing rate constant in meters per second
-bh = @(voltage) (1 / (e^(-(voltage + 35) / 10) + 1));
-     % h-gate closing rate constant in meters per second
-
-     
 V(1) = -65; % Initial Membrane voltage
 m(1)=am(V(1))/(am(V(1))+bm(V(1))); % Initial m-value
 n(1)=an(V(1))/(an(V(1))+bn(V(1))); % Initial n-value
 h(1)=ah(V(1))/(ah(V(1))+bh(V(1))); % Initial h-value
 
-for i=1:length(t)-1 % Loop through each step until time is finished
+for i=1:length(t)-1 % Loop through each step until time is
+finished
 
  %4 step method of Runge-Kutta
  K1=dt*HH(i,[V(i); n(i); m(i); h(i)]);
