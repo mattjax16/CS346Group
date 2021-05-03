@@ -45,12 +45,12 @@ leakage_current = @(voltage, n, m, h) (leakage_conductance * ...
 
 dvdt = @(voltage, I, n, m, h) (((1 / capitance) * ...
      (I - (sodium_channel_current(voltage, n, m, h) + ...
-     leakage_current(voltage, n, m, h)))));
+     leakage_current(voltage, n, m, h)-leakage_current(-65,n,m,h)))));
 dvdt2 = @(voltage, I, n, m, h) (((1 / capitance) * ...
      (I - (potassium_channel_current(voltage, n, m, h) + ...
-     leakage_current(voltage, n, m, h)))));
+     leakage_current(voltage, n, m, h)-leakage_current(-65,n,m,h)))));
  dvdt3 = @(voltage, I, n, m, h) (((1 / capitance) * ...
-     (I - (leakage_current(voltage, n, m, h)))));
+     (I - (leakage_current(voltage, n, m, h)-leakage_current(-65,n,m,h)))));
  
 
 dndt = @(voltage, n, m, h) ((an(voltage) * (1 - n) - bn(voltage) * n));
@@ -175,8 +175,8 @@ for i = 2:number_iterations
             h(i - 1) + h3);
         h4 = delta_time * dhdt(V(i - 1) + k3, n(i - 1) + n3, m(i - 1) + m3, ...
             h(i - 1) + h3);
-    elseif V(i-1) < 49.3 && depolorization == 1 && hyperpolorization == 1 && V(i-1) > -65
-        fprintf("enter1\n");
+    elseif V(i-1) < 49.3 && depolorization == 1 && hyperpolorization == 1 && V(i-1) < V(i-2)
+        
         k1 = delta_time * dvdt2(V(i - 1), applied_current, n(i - 1), m(i - 1), h(i - 1));
         n1 = delta_time * dndt(V(i - 1), n(i - 1), m(i - 1), h(i - 1));
         m1 = delta_time * dmdt(V(i - 1), n(i - 1), m(i - 1), h(i - 1)); 
@@ -208,15 +208,15 @@ for i = 2:number_iterations
             h(i - 1) + h3);
         h4 = delta_time * dhdt(V(i - 1) + k3, n(i - 1) + n3, m(i - 1) + m3, ...
             h(i - 1) + h3);
-    elseif V(i-1)<-65 && depolorization ==1 && hyperpolorization ==1
+    elseif V(i-1)>V(i-2) && depolorization ==1 && hyperpolorization ==1
         hyperpolorization = 0;
-        fprintf("enter2\n");
-        k1 = delta_time * dvdt(V(i - 1), applied_current, n(i - 1), m(i - 1), h(i - 1));
+        
+        k1 = delta_time * dvdt3(V(i - 1), applied_current, n(i - 1), m(i - 1), h(i - 1));
         n1 = delta_time * dndt(V(i - 1), n(i - 1), m(i - 1), h(i - 1));
         m1 = delta_time * dmdt(V(i - 1), n(i - 1), m(i - 1), h(i - 1)); 
         h1 = delta_time * dhdt(V(i - 1), n(i - 1), m(i - 1), h(i - 1));
 
-        k2 = delta_time * dvdt(V(i - 1) + (0.5 * k1), applied_current, n(i - 1) + ...
+        k2 = delta_time * dvdt3(V(i - 1) + (0.5 * k1), applied_current, n(i - 1) + ...
             (0.5 * n1), m(i - 1) + (0.5 * m1), h(i - 1) + (0.5 * h1));
         n2 = delta_time * dndt(V(i - 1) + (0.5 * k1), n(i - 1) + ...
             (0.5 * n1), m(i - 1) + (0.5 * m1), h(i - 1) + (0.5 * h1));
@@ -225,7 +225,7 @@ for i = 2:number_iterations
         h2 = delta_time * dhdt(V(i - 1) + (0.5 * k1), n(i - 1) + ...
             (0.5 * n1), m(i - 1) + (0.5 * m1), h(i - 1) + (0.5 * h1));
 
-        k3 = delta_time * dvdt(V(i - 1) + (0.5 * k2), applied_current, n(i - 1) + ...
+        k3 = delta_time * dvdt3(V(i - 1) + (0.5 * k2), applied_current, n(i - 1) + ...
             (0.5 * n2), m(i - 1) + (0.5 * m2), h(i - 1) + (0.5 * h2));
         n3 = delta_time * dndt(V(i - 1) + (0.5 * k2), n(i - 1) + ...
             (0.5 * n2), m(i - 1) + (0.5 * m2), h(i - 1) + (0.5 * h2));
@@ -234,7 +234,7 @@ for i = 2:number_iterations
         h3 = delta_time * dhdt(V(i - 1) + (0.5 * k2), n(i - 1) + ...
             (0.5 * n2), m(i - 1) + (0.5 * m2), h(i - 1) + (0.5 * h2));
 
-        k4 = delta_time * dvdt(V(i - 1) + k3, applied_current, n(i - 1) + n3, m(i - 1) + m3, ...
+        k4 = delta_time * dvdt3(V(i - 1) + k3, applied_current, n(i - 1) + n3, m(i - 1) + m3, ...
             h(i - 1) + h3);
         n4 = delta_time * dndt(V(i - 1) + k3, n(i - 1) + n3, m(i - 1) + m3, ...
             h(i - 1) + h3);
@@ -243,7 +243,7 @@ for i = 2:number_iterations
         h4 = delta_time * dhdt(V(i - 1) + k3, n(i - 1) + n3, m(i - 1) + m3, ...
             h(i - 1) + h3);
     elseif V(i-1)>V(i-2) && depolorization == 1 && hyperpolorization == 0
-        fprintf("enter\n");
+        
         k1 = delta_time * dvdt3(V(i - 1), applied_current, n(i - 1), m(i - 1), h(i - 1));
         n1 = delta_time * dndt(V(i - 1), n(i - 1), m(i - 1), h(i - 1));
         m1 = delta_time * dmdt(V(i - 1), n(i - 1), m(i - 1), h(i - 1)); 
