@@ -21,6 +21,8 @@ hyperpolorization = 1; %bool used in conditionals
 
 Na_K_threshold = 49.3; %voltage level where sodium gates close and 
                        %potassium gates open mV
+		   
+V_init = -65; %inital voltage level mV
                        
 I = 15; %amount which will be applied to the simulation nA
 
@@ -56,16 +58,19 @@ leakage_current = @(voltage, n, m, h) (leakage_conductance * ...
 %Differential equation for voltage with no potassium current
 dvdt = @(voltage, I, n, m, h) (((1 / capitance) * ...
      (I - (sodium_channel_current(voltage, n, m, h) + ...
-     leakage_current(voltage, n, m, h)-leakage_current(-65,n,m,h)))));
+     leakage_current(voltage, n, m, h)-...
+     leakage_current(V_init,n,m,h)))));
  
 %Differential equation for voltage with no sodium current
 dvdt2 = @(voltage, I, n, m, h) (((1 / capitance) * ...
      (I - (potassium_channel_current(voltage, n, m, h) + ...
-     leakage_current(voltage, n, m, h)-leakage_current(-65,n,m,h)))));
+     leakage_current(voltage, n, m, h)-...
+     leakage_current(V_init,n,m,h)))));
  
 %Differential equation for voltage with no potassium current 
  dvdt3 = @(voltage, I, n, m, h) (((1 / capitance) * ...
-     (I - (leakage_current(voltage, n, m, h)-leakage_current(-65,n,m,h)))));
+     (I - (leakage_current(voltage, n, m, h)-...
+     leakage_current(V_init,n,m,h)))));
  
 
 dndt = @(voltage, n, m, h) ((an(voltage) * (1 - n) - bn(voltage) * n));
