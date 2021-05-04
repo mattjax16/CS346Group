@@ -87,10 +87,10 @@ for i = 2:number_iterations
     time_array(i) = (i - 1) * delta_time;
     
     %checks for the correct time to apply the current to the system
-    if i*dt == time_curr
+    if i*delta_time == time_curr
          applied_current = I;
      end
-    if i*dt == time_curr+curr_duratoion
+    if i*delta_time == time_curr+curr_duratoion
          applied_current = applied_current-I;
     end
     
