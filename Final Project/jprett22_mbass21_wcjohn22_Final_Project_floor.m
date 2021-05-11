@@ -1,36 +1,33 @@
-%Jackson Prettyman, Matt Bass, Will Johnson
-%May 10, 2021
-%CA model of COVID infection accross a population
+% Jackson Prettyman, Matt Bass, Will Johnson
+% May 10, 2021
+% CA model of COVID infection accross a population
 
-
-%figure dimensions
+% figure dimensions
 m = 10; %number of rows 
 n = 10; %number of cols
 x = 1:m;
 y = 1:n; 
 
-%creating grid
+% creating grid
 cell_value = zeros(m,n);
 cell_value_extend = zeros(m+2,n+2);
-
 observation_period = {1:num_iterations};
 observation_period_extended = {1:num_iterations};
 
-total_popultion = m*n; %total number of people
-Susceptible = 0; %Total number of susceptible people
-Infected = 0; %Total number of infected people
-Recovered = 0; %Total number of recovered people
+% initial population values
+total_popultion = m*n; % total number of people
+Susceptible = 0; % total number of susceptible people
+Infected = 0; % total number of infected people
+Recovered = 0; % total number of recovered people
 
-%constants
-recovery_rate = .5; %rate at which infected recovers 
+% constants
+recovery_rate = .5; % rate at which infected recovers 
 transmission_constant = .50; %chance a susceptible becomes infected when ...
                              %when interacting with 1 infected
-%infected_mean_number_of_contacts_per_day = 8; %number of contacts each cell ...
-                                              %has per deay
                                              
-%initialization probabilities
+% initialization probabilities
 probability_initially_susceptible = 0.9; %probability to start susceptible 
-% probability_initially_infected = 0.1; %probability to start infected
+probability_initially_infected = 0.1; %probability to start infected
 probability_initially_phase_1 = 0.5; %probability if infected, start in phase 1
 
 %neighbor function for use in infection simulation
@@ -44,15 +41,16 @@ neighbor_sum = @(x,y,cell_value_extended) (1-(1-transmission_constant)^ ...
 
 
 %simulation constants
-t = 14; %number of days
-num_iterations = t; %number of iterations (in this case it is just number ..
-                    %number of days)
+days = 14; % number of days
+num_iterations = days; % number of iterations 
 
-%initializing the grid and grid list
-cell_value(x,y) = cell_value(x,y) + (rand>probability_initially_susceptible);
+% initializing the grid and grid list
+cell_value(x,y) = cell_value(x,y) + ...
+    (rand>probability_initially_susceptible);
 cell_value_extended(2:m+1,2:n+1) = cell_value;
 observation_period{1} = cell_value;
 observation_period_extended{1} = cell_value_extended;
+
 for i = 2:num_iterations
 cell_value = observation+period{i-1};
 cell_value_extended = observation_period_extended{i-1};

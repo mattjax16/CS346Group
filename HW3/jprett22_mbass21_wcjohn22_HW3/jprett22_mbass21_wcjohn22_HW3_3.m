@@ -104,7 +104,7 @@ for i = 2:number_iterations
      %checks for the correct time to apply the current to the system
     if i*delta_time == time_curr
          applied_current = I;
-     end
+    end
     if i*delta_time == time_curr+curr_duratoion
          applied_current = applied_current-I;
     end

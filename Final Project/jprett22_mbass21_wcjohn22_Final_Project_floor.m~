@@ -16,7 +16,7 @@ cell_value_extend = zeros(m+2,n+2);
 observation_period = {1:num_iterations};
 observation_period_extended = {1:num_iterations};
 
-total_popultion = m*n; %total number of people
+total_population = m*n; %total number of people
 Susceptible = 0; %Total number of susceptible people
 Infected = 0; %Total number of infected people
 Recovered = 0; %Total number of recovered people
