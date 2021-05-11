@@ -12,7 +12,7 @@ y = 1:n;
 cell_value = zeros(m, n);
 cell_value_extend = zeros(m + 2,n + 2);
 observation_period = {1:number_iterations};
-observation_period_extended = {1:number_iterations};
+observation_period_extend = {1:number_iterations};
 
 % simulation constants
 days = 14; % number of days
@@ -34,36 +34,36 @@ recovered_array(1) = initial_recovered;
 
 % constants
 length_of_infection = 2; % length in days that infection lasts
-recovery_rate = 1/length_of_infection; % rate at which infected recovers 
+recovery_rate = 1 / length_of_infection; % rate at which infected recovers 
 transmission_constant = .50; % chance a susceptible becomes infected ...
                              % when interacting with 1 infected
                                              
 % initialization probabilities
-probability_initially_susceptible = 0.9; %probability to start susceptible 
-probability_initially_infected = 0.1; %probability to start infected
-probability_initially_phase_1 = 0.5; %probability if infected, start in phase 1
+probability_initially_susceptible = 0.9; % probability to start susceptible 
+probability_initially_infected = 0.1; % probability to start infected
+probability_initially_phase_1 = 0.5; % probability if infected 
+                                     % starts in phase 1
 
 % neighbor function for use in infection simulation
 % input: coordinates of grid extended
 % output odds of infection given number of infected around susceptible
-neighbor_sum = @(x, y, cell_value_extended) (1 - (1 - ...
-    transmission_constant)^((cell_value_extended(x + 1, y) > 0 && ...
-    cell_value_extended(x + 1, y) < 3) + (cell_value_extended(x - 1, y) ...
-    > 0 && cell_value_extended(x - 1, y) < 3) + (cell_value_extended(x, ...
-    y + 1) > 0 && cell_value_extended(x, y + 1) < 3)+ ...
-    (cell_value_extended(x, y - 1) > 0 && cell_value_extended(x ,y - 1) ...
-    < 3)));
+neighbor_sum = @(x, y, cell_value_ex) ...
+    (1 - (1 - transmission_constant)^(...
+    (cell_value_ex(x + 1, y) > 0 && cell_value_ex(x + 1, y) < 3) ...
+    + (cell_value_ex(x - 1, y) > 0 && cell_value_ex(x - 1, y) < 3) ...
+    + (cell_value_ex(x, y + 1) > 0 && cell_value_ex(x, y + 1) < 3) ...
+    + (cell_value_ex(x, y - 1) > 0 && cell_value_ex(x ,y - 1) < 3)));
 
 % initializing the grid and grid list
 cell_value(x, y) = cell_value(x, y) + (rand > ...
-    probability_initially_susceptible);
-cell_value_extended(2:m + 1, 2:n + 1) = cell_value;
+                   probability_initially_susceptible);
+cell_value_extend(2:m + 1, 2:n + 1) = cell_value;
 observation_period{1} = cell_value;
-observation_period_extended{1} = cell_value_extended;
+observation_period_extend{1} = cell_value_extend;
 
 for i = 2:number_iterations
-cell_value = observation+period{i - 1};
-cell_value_extended = observation_period_extended{i - 1};
+cell_value = observation + period{i - 1};
+cell_value_extend = observation_period_extend{i - 1};
 %Alright so this is the set up for the loop to simulate the problem i am
 %having is trying to figure out how to make sure the neighbor function only
 %applies to the 0 values. I am pretty sure this is the use of conditionals
@@ -76,9 +76,9 @@ if cell_value(x, y) == 8
 end
 
 cell_value(x, y) = cell_value(x, y)+(rand > neighbor_sum(x, y, ...
-    cell_value_extended));
-cell_value_extended(2:m + 1,2:n + 1) = cell_value;
+                   cell_value_extend));
+cell_value_extend(2:m + 1,2:n + 1) = cell_value;
 observation_period{i} = cell_value;
-observation_period_extended{i} = cell_value_extended;
+observation_period_extend{i} = cell_value_extend;
 end
 
