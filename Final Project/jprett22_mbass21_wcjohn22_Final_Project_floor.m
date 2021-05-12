@@ -89,3 +89,34 @@ for i = 2:number_iterations
      observation_period{i} = cell_value;
      observation_period_extend{i} = cell_value_extend;
 end
+
+
+
+
+
+
+%Plotting the CA for each time step
+
+upper_cv_bound = 8;
+lower_cv_bound = 0;
+
+%set the color map
+set(groot,'DefaultFigureColormap',jet(64));
+figure;
+for i=1:1:number_iterations
+    
+    ca_model = observation_period{i};
+    
+    %Get max and mic cell value for the entire CA simulation
+    
+    imagesc(ca_model);
+    caxis([lower_cv_bound,upper_cv_bound]);
+    title(sprintf('Day: %d',i));
+    colorbar();
+    hold;
+    axis equal; axis tight; axis xy;
+    
+    %wait to go onto next image
+    fprintf('Waiting for any key to be pressed\n');
+    w = waitforbuttonpress;
+end
