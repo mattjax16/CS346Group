@@ -70,24 +70,23 @@ recovered_array = zeros(1, number_iterations);
 for i = 2:number_iterations    
      cell_value = observation_period{i - 1};
      cell_value_extend = observation_period_extend{i - 1};
-     for row = 2:rows+1
-         for col = 2:cols+1
-             if cell_value(row-1,col-1) == 0
-                cell_value(row-1,col-1) = cell_value(row-1,col-1) + ... 
-                (rand < probability_of_infection(row,col,cell_value_extend));
-             elseif cell_value(row-1,col-1) > 0 && cell_value(row-1,col-1) < 8
-                cell_value(row-1,col-1) = cell_value(row-1,col-1)+1;
-                
-                if cell_value(row-1,col-1) == 8
-                    cell_value(row-1,col-1) = 0;
-                 
+     for row = 2:rows + 1
+         for col = 2:cols + 1
+             if cell_value(row - 1, col - 1) == 0
+                cell_value(row - 1, col - 1) = ...
+                    cell_value(row - 1, col - 1) + (rand < ...
+                    probability_of_infection(row, col, cell_value_extend));
+             elseif cell_value(row - 1, col - 1) > 0 && ...
+                 cell_value(row - 1, col - 1) < 8
+                cell_value(row - 1, col - 1) = ...
+                    cell_value(row - 1, col - 1) + 1;
+                if cell_value(row - 1, col - 1) == 8
+                    cell_value(row - 1, col - 1) = 0;  
                 end
              end
-             
          end 
      end
      cell_value_extend(2:rows + 1, 2:cols + 1) = cell_value;
      observation_period{i} = cell_value;
      observation_period_extend{i} = cell_value_extend;
-     
 end
