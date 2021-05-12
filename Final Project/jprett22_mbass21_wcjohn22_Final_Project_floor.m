@@ -97,11 +97,11 @@ end
 
 %Plotting the CA for each time step
 
-upper_cv_bound = 8;
+upper_cv_bound = 4;
 lower_cv_bound = 0;
 
 %set the color map
-set(groot,'DefaultFigureColormap',jet(64));
+set(groot,'DefaultFigureColormap',jet(4));
 figure;
 for i=1:1:number_iterations
     
@@ -112,7 +112,8 @@ for i=1:1:number_iterations
     imagesc(ca_model);
     caxis([lower_cv_bound,upper_cv_bound]);
     title(sprintf('Day: %d',i));
-    colorbar();
+    cbh = colorbar();
+    cbh.Ticks = linspace(0, 4, 1); 
     hold;
     axis equal; axis tight; axis xy;
     
