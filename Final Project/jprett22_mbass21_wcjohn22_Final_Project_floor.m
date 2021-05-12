@@ -21,7 +21,6 @@ observation_period_extend = {};
 % constants
 length_of_infection = 2; % length in days that infection lasts
 length_of_immunity = 5;
-recovery_rate = 1 / length_of_infection; % rate at which infected recovers 
 transmission_constant = .25; % chance a susceptible becomes infected ...
                              % when interacting with 1 infected
 
