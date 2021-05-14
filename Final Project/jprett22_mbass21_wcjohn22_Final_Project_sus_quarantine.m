@@ -23,7 +23,7 @@ length_of_infection = 2; % length in days that infection lasts
 length_of_immunity = 5;
 transmission_constant = .25; % chance a susceptible becomes infected ...
                              % when interacting with 1 infected
-chance_of_death = .05; % chance of death when infected
+chance_of_death = .15; % chance of death when infected
 chance_of_qurantine = .30; % chance of quarantine when applicable
 
                              
@@ -77,7 +77,7 @@ susceptible_array = zeros(1, number_iterations);
 susceptible_array(1) = total_population - initial_infected;
 infected_array = zeros(1, number_iterations);
 infected_array(1) = initial_infected;
-recovered_array = zeros(1, number_iterations);
+dead_array = zeros(1,number_inerations);
 
 for i = 2:number_iterations    
      cell_value = observation_period{i - 1};
@@ -160,6 +160,16 @@ for i = 2:number_iterations
                     
                 end
              end
+             %the following conditionals check values to implament graphs
+             %for population tracking
+             if cell_value(row - 1, col - 1) == susceptible_state
+                 susceptible_array(i) = susceptible_array(i) + 1;
+             elseif cell_value(row - 1, col - 1) > susceptible_state && ...
+                     cell_value(row - 1, col - 1) < recovered_state
+                 infected_array(i) = infected_array(i)+1;
+             elseif cell_value(row - 1, col - 1) == dead_state
+                 dead_array(i) = dead_array(i) + 1;
+             end
          end 
      end
      cell_value_extend(2:rows + 1, 2:cols + 1) = cell_value;
@@ -174,11 +184,11 @@ end
 
 %Plotting the CA for each time step
 
-upper_cv_bound = 4;
+upper_cv_bound = 15;
 lower_cv_bound = 0;
 
 %set the color map
-set(groot,'DefaultFigureColormap',jet(4));
+set(groot,'DefaultFigureColormap',jet(64));
 figure;
 for i=1:1:number_iterations
     
@@ -197,4 +207,13 @@ for i=1:1:number_iterations
     %wait to go onto next image
     fprintf('Waiting for any key to be pressed\n');
     w = waitforbuttonpress;
+
 end
+t = 1:number_iterations;
+
+figure();
+plot(t,infected_array, t, dead_array, t, susceptible_array);
+title("Number of infected dead and susceptable over the simulation");
+xlabel("Days");
+ylabel("Number of Infected People");
+legend("Infected", "Dead", "Susceptible");
