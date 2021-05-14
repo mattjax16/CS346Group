@@ -23,33 +23,33 @@ length_of_infection = 2; % length in days that infection lasts
 length_of_immunity = 5;
 transmission_constant = .25; % chance a susceptible becomes infected ...
                              % when interacting with 1 infected
-chance_of_death = .05; %chance of a death when sick
-chance_of_qurantine = .30; %chance of being quarantined when applicable
-chance_of_mask = .5; %chance neighbor is wearing a mask on that check
+chance_of_death = .05; % chance of death when infected
+chance_of_qurantine = .30; % chance of quarantine when applicable
+
                              
 %cell states
-%All of the following are just state varaibles to to be easily changed
-%in future simulations
+%this is all numeric values for the states possible for each cell
 susceptible_state = 0; 
 exposed_state = 1;
 infectious_state = 2;
 recovered_state = 3;
 dead_state = 9;
-infected_quarantine_state = 10; %goes to this plus length of infection 
-susceptible_quarantine_state = 14; %goes to this plus length of infection
+infected_quarantine_state = 10; %goes to this + length of infection 
+susceptible_quarantine_state = 14; %goes to this + length of infection
 
 
 
 % neighbor function for use in infection simulation
 % input: coordinates of grid extended
-% output: odds of infection given number of infected around susceptible and
-% if the neighbor is wearing a mask based on the chance of mask constant
+% output: odds of infection given number of people in the infectious state
+%around susceptibles
+
 probability_of_infection = @(x, y, cell_value_ex) ...
     ((transmission_constant) ...
-    * ((cell_value_ex(x + 1, y) == infectious_state && rand < chance_of_mask) ...
-    + (cell_value_ex(x - 1, y) == infectious_state && rand < chance_of_mask)  ...
-    + (cell_value_ex(x, y + 1) == infectious_state && rand < chance_of_mask)  ...
-    + (cell_value_ex(x, y - 1) == infectious_state && rand < chance_of_mask)));
+    * ((cell_value_ex(x + 1, y) == infectious_state) ...
+    + (cell_value_ex(x - 1, y) == infectious_state)  ...
+    + (cell_value_ex(x, y + 1) == infectious_state)  ...
+    + (cell_value_ex(x, y - 1) == infectious_state)));
 
 % initial population values
 total_population = rows * cols; % total number of people
@@ -157,6 +157,7 @@ for i = 2:number_iterations
                 if cell_value(row - 1, col - 1) == ...
                    infected_quarantine_state + length_of_infection
                         cell_value(row - 1, col - 1) = recovered_state;
+                    
                 end
              end
          end 
